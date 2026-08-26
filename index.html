@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Envios UX · Painel</title>
+  <style>
+    :root {
+      --bg: #f4f6f3;
+      --ink: #14211d;
+      --muted: #63716c;
+      --line: #dce4df;
+      --card: #ffffff;
+      --good: #0f7a4e;
+      --bad: #b42318;
+      --warn: #b7791f;
+      --soft-good: #e7f4ee;
+      --soft-bad: #fff0ed;
+      --soft-warn: #fff7e4;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at top left, #eaf2ed, var(--bg) 42%); color: var(--ink); }
+    main { max-width: 1220px; margin: 0 auto; padding: 28px 24px 18px; }
+    header { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; margin-bottom: 18px; }
+    h1 { margin: 0; font-size: clamp(34px, 5vw, 58px); letter-spacing: -0.06em; line-height: .92; font-weight: 750; }
+    .eyebrow { margin: 0 0 8px; text-transform: uppercase; letter-spacing: .18em; color: var(--good); font-size: 12px; font-weight: 800; }
+    .subtitle { margin: 12px 0 0; color: var(--muted); max-width: 720px; font-size: 16px; line-height: 1.45; }
+    .stamp { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 18px 22px; min-width: 210px; box-shadow: 0 14px 34px rgba(20,33,29,.06); }
+    .stamp span { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 800; }
+    .stamp strong { display: block; margin-top: 6px; font-size: 30px; }
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 18px; }
+    .pill { border: 1px solid var(--line); background: rgba(255,255,255,.72); border-radius: 999px; padding: 10px 14px; font-size: 13px; color: var(--muted); }
+    .grid { display: grid; gap: 14px; }
+    .kpis { grid-template-columns: repeat(4, 1fr); }
+    .kpi, .card, .panel { background: rgba(255,255,255,.84); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 16px 40px rgba(20,33,29,.07); }
+    .kpi { padding: 20px; min-height: 128px; }
+    .kpi span, .card-top span, .panel h2, .mini span { display: block; text-transform: uppercase; letter-spacing: .13em; color: #52625c; font-size: 11px; font-weight: 850; }
+    .kpi strong { display: block; margin: 12px 0 6px; font-size: 40px; letter-spacing: -.04em; }
+    small, .kpi small, .card p { color: var(--muted); }
+    .performance-row { grid-template-columns: repeat(3, 1fr); margin-top: 14px; }
+    .card { padding: 20px; }
+    .card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .card-top strong { font-size: 42px; letter-spacing: -.05em; }
+    .performance.good { background: linear-gradient(180deg, #fff, var(--soft-good)); }
+    .performance.bad { background: linear-gradient(180deg, #fff, var(--soft-bad)); }
+    .performance.neutral { background: linear-gradient(180deg, #fff, #f1f2f1); }
+    .performance.good .bar i { background: var(--good); }
+    .performance.bad .bar i { background: var(--bad); }
+    .bar { height: 9px; border-radius: 999px; background: #e7ece9; overflow: hidden; margin: 14px 0 18px; }
+    .bar i { display: block; height: 100%; border-radius: inherit; }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric-grid div, .mini { background: rgba(255,255,255,.68); border: 1px solid rgba(220,228,223,.78); border-radius: 16px; padding: 12px; }
+    .metric-grid b { display: block; font-size: 24px; }
+    .metric-grid small { display: block; margin-top: 3px; font-size: 12px; }
+    .lower { grid-template-columns: 1.15fr .85fr; margin-top: 14px; }
+    .panel { padding: 20px; }
+    .panel h2 { margin: 0 0 12px; }
+    .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .list li { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-radius: 16px; background: #f6f8f6; padding: 12px 14px; }
+    .list span { color: var(--muted); }
+    .list strong { font-size: 20px; }
+    .fusion { margin-top: 14px; }
+    .fusion-head { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 14px; }
+    .fusion-score { font-size: 34px; color: var(--warn); font-weight: 850; }
+    .mini-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .mini strong { display: block; margin: 8px 0 4px; font-size: 22px; }
+    footer { margin-top: 14px; color: var(--muted); font-size: 11px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    @media (max-width: 900px) {
+      main { padding: 18px 14px; }
+      header, .kpis, .performance-row, .lower { grid-template-columns: 1fr; }
+      .mini-grid { grid-template-columns: repeat(2, 1fr); }
+      .stamp { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Envios Carrefour · Foco UXL · Dados agregados</p>
+        <h1>Envios UX</h1>
+        <p class="subtitle">Fotografia de agosto com performance de envio, transporte, entrega ao cliente e saúde do fluxo operacional.</p>
+      </div>
+      <aside class="stamp">
+        <span>Status</span>
+        <strong>Atenção</strong>
+        <small>01/08 a 26/08</small>
+      </aside>
+    </header>
+
+    <div class="filters">
+      <span class="pill">Período: 01/08 a 26/08</span>
+      <span class="pill">Transportadora: UXL</span>
+      <span class="pill">Base: 369 pedidos</span>
+      <span class="pill">Atualizado: 2026-08-26 07:34:12 BRT</span>
+    </div>
+
+    <section class="grid kpis">
+      <section class="kpi">
+        <span>Total de pedidos</span>
+        <strong>369</strong>
+        <small>UXL em agosto</small>
+      </section>
+      <section class="kpi">
+        <span>Pedidos válidos</span>
+        <strong>245</strong>
+        <small>base da performance</small>
+      </section>
+      <section class="kpi">
+        <span>Ainda no prazo</span>
+        <strong>81</strong>
+        <small>abertos sem atraso</small>
+      </section>
+      <section class="kpi">
+        <span>Abertos em atraso</span>
+        <strong>15</strong>
+        <small>abertos em atraso</small>
+      </section></section>
+
+    <section class="grid performance-row">
+      
+    <section class="card performance bad">
+      <div class="card-top">
+        <span>Envio do pedido</span>
+        <strong>83,3%</strong>
+      </div>
+      <div class="bar"><i style="width:83.3%"></i></div>
+      <div class="metric-grid">
+        <div><b>194</b><small>No prazo</small></div>
+        <div><b>39</b><small>Fora do prazo</small></div>
+        <div><b>4</b><small>Abertos no prazo</small></div>
+        <div><b>8</b><small>Abertos atrasados</small></div>
+      </div>
+      <p>Base calculada: 233 pedidos</p>
+    </section>
+      
+    <section class="card performance good">
+      <div class="card-top">
+        <span>Transporte</span>
+        <strong>97,9%</strong>
+      </div>
+      <div class="bar"><i style="width:97.9%"></i></div>
+      <div class="metric-grid">
+        <div><b>187</b><small>No prazo</small></div>
+        <div><b>4</b><small>Fora do prazo</small></div>
+        <div><b>31</b><small>Abertos no prazo</small></div>
+        <div><b>5</b><small>Abertos atrasados</small></div>
+      </div>
+      <p>Base calculada: 191 pedidos</p>
+    </section>
+      
+    <section class="card performance bad">
+      <div class="card-top">
+        <span>Entrega ao cliente</span>
+        <strong>91,4%</strong>
+      </div>
+      <div class="bar"><i style="width:91.4%"></i></div>
+      <div class="metric-grid">
+        <div><b>180</b><small>No prazo</small></div>
+        <div><b>17</b><small>Fora do prazo</small></div>
+        <div><b>46</b><small>Abertos no prazo</small></div>
+        <div><b>2</b><small>Abertos atrasados</small></div>
+      </div>
+      <p>Base calculada: 197 pedidos</p>
+    </section>
+    </section>
+
+    <section class="grid lower">
+      <div class="panel">
+        <h2>Onde olhar primeiro</h2>
+        <ul class="list">
+      <li>
+        <span>Envio atrasado</span>
+        <strong>47</strong>
+      </li>
+      <li>
+        <span>Transporte atrasado</span>
+        <strong>8</strong>
+      </li>
+      <li>
+        <span>Dados do recebedor</span>
+        <strong>8</strong>
+      </li>
+      <li>
+        <span>Entrega fora do prazo</span>
+        <strong>4</strong>
+      </li></ul>
+      </div>
+      <div class="panel">
+        <h2>Maiores sellers UXL</h2>
+        <ul class="list">
+      <li>
+        <span>MCS VARIEDADES</span>
+        <strong>173</strong>
+      </li>
+      <li>
+        <span>AS Eletrônics</span>
+        <strong>55</strong>
+      </li>
+      <li>
+        <span>Fahm Eletronicos</span>
+        <strong>6</strong>
+      </li>
+      <li>
+        <span>Ratinho Targino</span>
+        <strong>6</strong>
+      </li>
+      <li>
+        <span>RTN imports</span>
+        <strong>4</strong>
+      </li></ul>
+      </div>
+    </section>
+
+    <section class="panel fusion">
+      <div class="fusion-head">
+        <div>
+          <h2>Funcionamento dos sistemas</h2>
+          <p class="subtitle" style="margin-top:6px">Etiquetas e rastreamento estão saudáveis; atenção para problemas ativos e pendências.</p>
+        </div>
+        <div class="fusion-score">99,4%</div>
+      </div>
+      <div class="mini-grid">
+      <div class="mini">
+        <span>Pedidos no sistema</span>
+        <strong>4812</strong>
+        <small>pedidos encontrados</small>
+      </div>
+      <div class="mini">
+        <span>Etiquetas geradas</span>
+        <strong>100%</strong>
+        <small>4812 / 4812</small>
+      </div>
+      <div class="mini">
+        <span>Rastreamento recebido</span>
+        <strong>100%</strong>
+        <small>4812 / 4812</small>
+      </div>
+      <div class="mini">
+        <span>Pendências</span>
+        <strong>1</strong>
+        <small>fila: 164 / 165</small>
+      </div>
+      <div class="mini">
+        <span>Problemas ativos</span>
+        <strong>92</strong>
+        <small>pedidos com erro ativo</small>
+      </div>
+      <div class="mini">
+        <span>Reversas em análise</span>
+        <strong>33</strong>
+        <small>11 precisam ação</small>
+      </div></div>
+    </section>
+
+    <footer>
+      <span>Base de pedidos: 2026-08-26T13:20:00.000Z · Tracking UXL: 2026-08-26T13:20:00.000Z · Saúde do fluxo: 2026-08-26 07:34:12 BRT</span>
+      <span>read-only · sem PII · pode_executar=NAO</span>
+    </footer>
+  </main>
+</body>
+</html>
